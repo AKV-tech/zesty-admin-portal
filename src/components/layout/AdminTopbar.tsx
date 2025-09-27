@@ -53,13 +53,12 @@ export function AdminTopbar() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
-          <DropdownMenuItem className="flex items-center gap-2">
+          <DropdownMenuItem 
+            className="flex items-center gap-2"
+            onClick={() => navigate('/admin/account')}
+          >
             <User className="w-4 h-4" />
-            <span>Profile</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="flex items-center gap-2">
-            <Settings className="w-4 h-4" />
-            <span>Settings</span>
+            <span>Account Settings</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem 
