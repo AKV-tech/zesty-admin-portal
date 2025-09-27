@@ -26,9 +26,22 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(() => {
-    // Check localStorage for existing session
-    const savedUser = localStorage.getItem('adminUser');
-    return savedUser ? JSON.parse(savedUser) : null;
+    // Safely check localStorage for existing session
+    try {
+      const savedUser = localStorage.getItem('adminUser');
+      if (savedUser) {
+        const parsedUser = JSON.parse(savedUser);
+        // Validate the parsed data has the expected structure
+        if (parsedUser && typeof parsedUser === 'object' && parsedUser.id && parsedUser.email) {
+          return parsedUser;
+        }
+      }
+    } catch (error) {
+      // If localStorage is corrupted or unavailable, clear it and continue
+      console.warn('Failed to parse user data from localStorage:', error);
+      localStorage.removeItem('adminUser');
+    }
+    return null;
   });
 
   const navigate = useNavigate();
@@ -42,7 +55,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         name: email.split('@')[0] || 'Admin User'
       };
       setUser(mockUser);
-      localStorage.setItem('adminUser', JSON.stringify(mockUser));
+      try {
+        localStorage.setItem('adminUser', JSON.stringify(mockUser));
+      } catch (error) {
+        console.warn('Failed to save user data to localStorage:', error);
+      }
       navigate('/admin');
       return true;
     }
@@ -51,7 +68,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('adminUser');
+    try {
+      localStorage.removeItem('adminUser');
+    } catch (error) {
+      console.warn('Failed to remove user data from localStorage:', error);
+    }
     navigate('/admin/login');
   };
 

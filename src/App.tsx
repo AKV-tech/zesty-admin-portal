@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import Login from "./pages/admin/Login";
 import AdminLayout from "./components/layout/AdminLayout";
 import Assets from "./pages/admin/Assets";
@@ -18,33 +19,35 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/admin/login" element={<Login />} />
-            <Route path="/admin" element={
-              <SidebarProvider>
-                <AdminLayout />
-              </SidebarProvider>
-            }>
-              <Route index element={<Navigate to="/admin/assets" replace />} />
-              <Route path="assets" element={<Assets />} />
-              <Route path="scenes" element={<Scenes />} />
-              <Route path="qr" element={<QR />} />
-              <Route path="analytics" element={<Analytics />} />
-              <Route path="account" element={<Account />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/admin/login" element={<Login />} />
+              <Route path="/admin" element={
+                <SidebarProvider>
+                  <AdminLayout />
+                </SidebarProvider>
+              }>
+                <Route index element={<Navigate to="/admin/assets" replace />} />
+                <Route path="assets" element={<Assets />} />
+                <Route path="scenes" element={<Scenes />} />
+                <Route path="qr" element={<QR />} />
+                <Route path="analytics" element={<Analytics />} />
+                <Route path="account" element={<Account />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AuthProvider>
         </BrowserRouter>
       </TooltipProvider>
-    </AuthProvider>
-  </QueryClientProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;
