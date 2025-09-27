@@ -25,7 +25,6 @@ const navigationItems = [
   { title: 'Scenes', url: '/admin/scenes', icon: Layers3 },
   { title: 'QR Codes', url: '/admin/qr', icon: QrCode },
   { title: 'Analytics', url: '/admin/analytics', icon: BarChart3 },
-  { title: 'Account', url: '/admin/account', icon: User },
 ];
 
 export function AdminSidebar() {
