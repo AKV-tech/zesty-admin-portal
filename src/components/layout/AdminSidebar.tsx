@@ -33,8 +33,6 @@ export function AdminSidebar() {
   const location = useLocation();
   const isCollapsed = state === 'collapsed';
 
-  const isActive = (path: string) => location.pathname === path;
-
   return (
     <Sidebar
       className="transition-smooth border-r"
@@ -59,25 +57,30 @@ export function AdminSidebar() {
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navigationItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink
-                      to={item.url}
-                      className={({ isActive }) =>
-                        `flex items-center gap-3 px-3 py-2 rounded-md transition-smooth ${
-                          isActive
-                            ? 'bg-primary text-primary-foreground font-medium'
-                            : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-                        }`
-                      }
+              {navigationItems.map((item) => {
+                const isActive = location.pathname === item.url;
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      tooltip={isCollapsed ? item.title : undefined}
                     >
-                      <item.icon className="w-4 h-4" />
-                      {!isCollapsed && <span>{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+                      <NavLink
+                        to={item.url}
+                        className={`flex items-center gap-3 w-full transition-smooth ${
+                          isActive
+                            ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                        }`}
+                      >
+                        <item.icon className="w-4 h-4 flex-shrink-0" />
+                        {!isCollapsed && <span>{item.title}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
