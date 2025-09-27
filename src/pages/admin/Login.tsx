@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,6 +16,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { login, isAuthenticated } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   if (isAuthenticated) {
     return <Navigate to="/admin" replace />;
@@ -27,7 +28,9 @@ const Login = () => {
 
     try {
       const success = await login(email, password);
-      if (!success) {
+      if (success) {
+        navigate('/admin');
+      } else {
         toast({
           title: 'Login failed',
           description: 'Please check your credentials and try again.',

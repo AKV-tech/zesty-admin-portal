@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -25,7 +25,13 @@ const getPageTitle = (pathname: string) => {
 export function AdminTopbar() {
   const location = useLocation();
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const pageTitle = getPageTitle(location.pathname);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/admin/login');
+  };
 
   return (
     <div className="flex items-center justify-between w-full max-w-none">
@@ -58,7 +64,7 @@ export function AdminTopbar() {
           <DropdownMenuSeparator />
           <DropdownMenuItem 
             className="flex items-center gap-2 text-destructive focus:text-destructive"
-            onClick={logout}
+            onClick={handleLogout}
           >
             <LogOut className="w-4 h-4" />
             <span>Sign Out</span>

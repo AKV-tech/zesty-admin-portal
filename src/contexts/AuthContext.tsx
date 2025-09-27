@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 interface User {
   id: string;
@@ -44,8 +43,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return null;
   });
 
-  const navigate = useNavigate();
-
   const login = async (email: string, password: string): Promise<boolean> => {
     // Mock authentication - accept any email/password combination
     if (email && password) {
@@ -60,7 +57,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } catch (error) {
         console.warn('Failed to save user data to localStorage:', error);
       }
-      navigate('/admin');
       return true;
     }
     return false;
@@ -73,7 +69,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.warn('Failed to remove user data from localStorage:', error);
     }
-    navigate('/admin/login');
   };
 
   const isAuthenticated = !!user;
